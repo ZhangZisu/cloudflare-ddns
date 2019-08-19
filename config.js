@@ -1,10 +1,11 @@
 const fs = require('fs')
+const path = require('path')
 const assert = require('assert')
 
 module.exports = () => {
   /** @type {Map<string, string[]>} */
   const map = new Map()
-  const arr = fs.readFileSync('.conf')
+  const arr = fs.readFileSync(path.resolve(__dirname, '.conf'))
     .toString()
     .split('\n')
     .map(x => x.trim())
