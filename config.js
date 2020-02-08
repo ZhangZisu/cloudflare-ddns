@@ -21,9 +21,12 @@ module.exports = () => {
       return value[0]
     },
     array(key) {
-      assert(map.has(key))
-      const value = map.get(key)
-      return value
+      if (map.has(key)) {
+        const value = map.get(key)
+        return value
+      } else {
+        return []
+      }
     }
   }
 }
