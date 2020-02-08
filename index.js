@@ -100,5 +100,13 @@ const main = async () => {
 }
 
 main()
-  .catch(e => console.error(e))
-  .finally(() => process.exit(0))
+  .then(() => process.exit(0))
+  .catch(e => {
+    if (e.isAxiosError) {
+      console.error('network error', chalk.redBright(e.message))
+      process.exit(1)
+    } else {
+      console.error(e.message)
+    }
+    process.exit(-1)
+  })
