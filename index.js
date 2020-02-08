@@ -1,5 +1,6 @@
 const config = require('./config')()
 const assert = require('assert')
+const chalk = require('chalk')
 const Axios = require('axios').default
 const axios = Axios.create({
   baseURL: 'https://api.cloudflare.com/client/v4/',
@@ -39,26 +40,25 @@ const walk = async (url, params) => {
 const A = async (zones) => {
   const names = config.array('A')
   if (!names.length) return
+  stdout.write(`Update for ${chalk.greenBright('A')} records`)
   const ip = await getIPv4()
-  console.log(`Update for A records (${ip})`)
+  stdout.write(` ${chalk.bold.white(ip)}\n`)
   for (const name of names) {
-    stdout.write(name)
+    stdout.write(chalk.bold(name))
     const zone = zones.find(x => name.endsWith(x.name))
     if (!zone) {
-      stdout.write(' no corresponding zone\n')
+      stdout.write(chalk.redBright(' no corresponding zone\n'))
       continue
     }
-    stdout.write(` zone ${zone.id}`)
+    stdout.write(` ${chalk.grey(zone.id.substr(0, 4))}`)
     const records = await walk(`zones/${zone.id}/dns_records`, { name, type: 'A' })
     if (!records.length) {
-      stdout.write(' c')
+      stdout.write(chalk.greenBright(' NEW\n'))
       await axios.post(`zones/${zone.id}/dns_records`, { type: 'A', name, content: ip })
-      stdout.write(` ${ip}\n`)
     } else {
       const record = records[0]
-      stdout.write(` u ${record.id}`)
+      stdout.write(chalk.greenBright(` ${record.id.substr(0, 4)}\n`))
       await axios.put(`zones/${zone.id}/dns_records/${record.id}`, { type: 'A', name, content: ip })
-      stdout.write(` ${ip}\n`)
     }
   }
 }
@@ -69,26 +69,25 @@ const A = async (zones) => {
 const AAAA = async (zones) => {
   const names = config.array('AAAA')
   if (!names.length) return
+  stdout.write(`Update for ${chalk.greenBright('AAAA')} records`)
   const ip = await getIPv6()
-  console.log(`Update for AAAA records (${ip})`)
+  stdout.write(` ${chalk.bold.white(ip)}\n`)
   for (const name of names) {
-    stdout.write(name)
+    stdout.write(chalk.bold(name))
     const zone = zones.find(x => name.endsWith(x.name))
     if (!zone) {
-      stdout.write(' no corresponding zone\n')
+      stdout.write(chalk.redBright(' no corresponding zone\n'))
       continue
     }
-    stdout.write(` zone ${zone.id}`)
+    stdout.write(` ${chalk.grey(zone.id.substr(0, 4))}`)
     const records = await walk(`zones/${zone.id}/dns_records`, { name, type: 'AAAA' })
     if (!records.length) {
-      stdout.write(' c')
+      stdout.write(chalk.greenBright(' NEW\n'))
       await axios.post(`zones/${zone.id}/dns_records`, { type: 'AAAA', name, content: ip })
-      stdout.write(` ${ip}\n`)
     } else {
       const record = records[0]
-      stdout.write(` u ${record.id}`)
+      stdout.write(chalk.greenBright(` ${record.id.substr(0, 4)}\n`))
       await axios.put(`zones/${zone.id}/dns_records/${record.id}`, { type: 'AAAA', name, content: ip })
-      stdout.write(` ${ip}\n`)
     }
   }
 }
