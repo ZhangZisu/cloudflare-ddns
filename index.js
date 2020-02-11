@@ -58,7 +58,7 @@ const A = async (zones) => {
     } else {
       const record = records[0]
       stdout.write(chalk.greenBright(` ${record.id.substr(0, 4)}\n`))
-      await axios.put(`zones/${zone.id}/dns_records/${record.id}`, { type: 'A', name, content: ip })
+      await axios.patch(`zones/${zone.id}/dns_records/${record.id}`, { content: ip })
     }
   }
 }
@@ -87,7 +87,7 @@ const AAAA = async (zones) => {
     } else {
       const record = records[0]
       stdout.write(chalk.greenBright(` ${record.id.substr(0, 4)}\n`))
-      await axios.put(`zones/${zone.id}/dns_records/${record.id}`, { type: 'AAAA', name, content: ip })
+      await axios.patch(`zones/${zone.id}/dns_records/${record.id}`, { content: ip })
     }
   }
 }
