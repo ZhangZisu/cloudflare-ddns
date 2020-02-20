@@ -1,9 +1,9 @@
 const config = require('./config')()
 const assert = require('assert')
 const chalk = require('chalk')
-const Axios = require('axios').default
-const axios = Axios.create({
+const axios = require('axios').default.create({
   baseURL: 'https://api.cloudflare.com/client/v4/',
+  timeout: 5000,
   headers: {
     'Authorization': `Bearer ${config.string('token')}`
   }
@@ -12,12 +12,12 @@ const axios = Axios.create({
 const stdout = process.stdout
 
 const getIPv4 = async () => {
-  const res = await Axios.get('https://v4.ident.me')
+  const res = await axios.get('http://v4.ipv6-test.com/api/myip.php')
   return res.data
 }
 
 const getIPv6 = async () => {
-  const res = await Axios.get('https://v6.ident.me')
+  const res = await axios.get('http://v6.ipv6-test.com/api/myip.php')
   return res.data
 }
 
