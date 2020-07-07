@@ -8,6 +8,7 @@ const axios = require('axios').default.create({
     'Authorization': `Bearer ${config.string('token')}`
   }
 })
+const os = require('os')
 
 const stdout = process.stdout
 
@@ -17,8 +18,17 @@ const getIPv4 = async () => {
 }
 
 const getIPv6 = async () => {
-  const res = await axios.get('http://v6.ipv6-test.com/api/myip.php')
-  return res.data
+  const names = config.array('interface')
+  const interfaces = os.networkInterfaces()
+  const result = []
+  for (const name of names) {
+    if (name in interfaces) {
+      const interface = interfaces[name]
+      result.push(...interface.filter(i => i.family === 'IPv6' && i.scopeid === 0 && i.netmask === 'ffff:ffff:ffff:ffff::'))
+    }
+  }
+  assert(result.length > 0)
+  return result[0]
 }
 
 const walk = async (url, params) => {
