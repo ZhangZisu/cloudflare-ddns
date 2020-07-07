@@ -24,7 +24,7 @@ const getIPv6 = async () => {
   for (const name of names) {
     if (name in interfaces) {
       const interface = interfaces[name]
-      result.push(...interface.filter(i => i.family === 'IPv6' && i.scopeid === 0 && i.netmask === 'ffff:ffff:ffff:ffff::'))
+      result.push(...interface.filter(i => i.family === 'IPv6' && i.scopeid === 0 && i.netmask === 'ffff:ffff:ffff:ffff::').map(x => x.address))
     }
   }
   assert(result.length > 0)
